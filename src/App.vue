@@ -1,32 +1,49 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div id="app">
+        <my-header></my-header>
+        <nav-bar></nav-bar>
+        <keep-alive>
+            <router-view></router-view>
+        </keep-alive>
+        <my-footer></my-footer>
     </div>
-    <router-view/>
-  </div>
 </template>
 
+<script>
+    import MyHeader from '@/components/common/myheader/MyHeader'
+    import NavBar from '@/components/common/navbar/NavBar'
+    import MyFooter from '@/components/common/myfooter/MyFooter'
+    import Home from './views/home/Home'
+    import Donate from './views/donate/Donate'
+
+    import {getCategories} from "./network/home";
+
+
+    export default {
+        name: 'App',
+        components: {
+            Home,
+            Donate,
+            MyHeader,
+            NavBar,
+            MyFooter,
+        },
+        methods: {
+            getCategories() {
+                getCategories().then(res => {
+                    this.$store.commit('initBlogCategories', res.blogCategories);
+                });
+            },
+        },
+        created() {
+            this.getCategories();
+        }
+    }
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+    @import "./assets/css/base.css";
+    #app {
+        background: url("./assets/img/home/body_bg.jpg") no-repeat center/110%;
+    }
 </style>
